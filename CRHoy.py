@@ -198,8 +198,8 @@ def obtenerPlanos (cont, ruta) :
             tag_xml.text = tag.getText()
 
         #Codificacion
-        archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
-        archivo_xml = prettify(archivo_xml).encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
+        archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore').replace('&quot;', '')
+        archivo_xml = prettify(archivo_xml).encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore').replace('&quot;', '\"')
 
         #Creacion de archivos
         hacerArchivo(ruta, archivo_txt, nombre, '.txt')

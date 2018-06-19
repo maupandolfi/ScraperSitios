@@ -91,9 +91,12 @@ def obtenerPlanos (cont, ruta) :
     portada  = homePage.find('section')
     noticias_portada = portada.find_all('a', limit=5)
 
+    categorias = []
+
     for x in range (0,5) :
         a_con_link = noticias_portada[x]
         links.append("https://www.laprensalibre.cr" + a_con_link['href'])
+        categorias.append(a_con_link.find('p', attrs={ 'class', 'sectionName' }).getText())
 
     indice = 1
 
@@ -105,8 +108,10 @@ def obtenerPlanos (cont, ruta) :
         archivo_xml = Element('nota')
         archivo_txt = ""
 
+        contenidos = sou.find('section')
+
         # Titulo
-        titulo = sou.find('section').h1.getText()
+        titulo = contenidos.h1.getText()
         archivo_txt = archivo_txt + titulo + "\n"
         tit = SubElement(archivo_xml, 'titulo')
         tit.text = titulo
@@ -119,46 +124,39 @@ def obtenerPlanos (cont, ruta) :
             baj.text = b.getText().replace("\n", "")
             archivo_txt = archivo_txt + b.getText() + "\n"
 
-        # Parrafos ================================================================= VOY ACÁ
-        contenidos = sou.find('p', attrs={'id': 'article-content'})
+        # Parrafos
 
         texto = SubElement(archivo_xml, 'texto')
 
-        aux = contenidos.find_all(['p', 'span'], attrs={'class': 'element'})
+        aux = contenidos.find_all('p')
 
         es_lead = True
 
         for p in aux:
-            if p.name == 'p':
-                if (es_lead):
-                    parr = SubElement(texto, 'lead')
-                    parr.text = p.getText()
-                    es_lead = False
-                else:
-                    parr = SubElement(texto, 'parrafo')
-                    if (p.find('b') is None) :
-                        parr.text = p.getText()
-                    else :
-                        resal = SubElement(parr, 'resaltado')
-                        resal.text = p.getText()
-            else:
-                if p.name == 'span':
-                    subtit = SubElement(texto, 'subtitulo')
-                    subtit.text = p.getText()
-            archivo_txt = archivo_txt + p.getText() + "\n"
+            if p.contents[0].name is None and p.parent.name != 'a' and p.parent.name != 'article':
+                for parrafo in p.contents :
+                    if parrafo.name is None and parrafo != ' ':
+                        if (es_lead):
+                            parr = SubElement(texto, 'lead')
+                            parr.text = parrafo
+                            es_lead = False
+                        else:
+                            parr = SubElement(texto, 'parrafo')
+                            parr.text = parrafo
+                        archivo_txt = archivo_txt + parrafo + "\n"
 
 
-        # Tags
-        div_tags = sou.find('div', attrs={'class': 'etiqueta'})
+        # Tags NA
+        div_tags = sou.find('div', attrs={'id': 'tags'})
         tags = div_tags.find_all('a')
         for tag in tags :
             tag_xml = SubElement(archivo_xml, 'etiqueta')
             tag_xml.text = tag.getText()
 
         # Categoría
-        clasificacion = (sou.find('div', attrs={'class': 'headline-seccion'})).a
+        clasificacion = categorias[indice-1]
         cat = SubElement(archivo_xml, 'categoria')
-        cat.text = clasificacion.getText().replace("\n", "")
+        cat.text = categorias[indice-1].replace("\n", "")
 
         # Codificacion
         archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
@@ -174,10 +172,10 @@ def obtenerPlanos (cont, ruta) :
 def crearCarpeta (nom) :
     if not os.path.exists(nom):
         os.makedirs(nom)
-        os.makedirs(nom+"/NACION.COM")
-    elif not os.path.exists(nom+"/NACION.COM"):
-        os.makedirs(nom + "/NACION.COM")
-    os.chdir(nom + "/NACION.COM")
+        os.makedirs(nom+"/LAPRENSALIBRE.CR")
+    elif not os.path.exists(nom+"/LAPRENSALIBRE.CR"):
+        os.makedirs(nom + "/LAPRENSALIBRE.CR")
+    os.chdir(nom + "/LAPRENSALIBRE.CR")
 
 
 def hacerArchivo(ruta, info, nom, tipo):

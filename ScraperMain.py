@@ -27,8 +27,8 @@ def obtenerInfo():
     os.chdir(directorio)
     Monumental.obtenerPortada()
 
-#    os.chdir(directorio)
-#    PrensaLibre.obtenerPortada()
+    os.chdir(directorio)
+    PrensaLibre.obtenerPortada()
 
 
 
