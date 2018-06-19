@@ -1,40 +1,11 @@
-import bs4
-from requests import get
-from requests.exceptions import RequestException
-from contextlib import closing
+import Herramientas
 from bs4 import BeautifulSoup
 from xml.etree import ElementTree
 from xml.dom import minidom
-from xml.etree.ElementTree import Element, SubElement, Comment
 
 import datetime
 import json
 import os
-
-
-def get_simple(url):
-    try:
-        with closing(get(url, stream=True)) as resp:
-            if revisar_respuesta(resp):
-                return resp.content
-            else:
-                return None
-
-    except RequestException as e:
-        log_error('Error during requests to {0} : {1}'.format(url, str(e)))
-        return None
-
-
-def revisar_respuesta(resp):
-    content_type = resp.headers['Content-Type'].lower()
-    return (resp.status_code == 200
-            and content_type is not None
-            and ( content_type.find('html') > -1 or content_type.find('json') > -1 ) )
-
-
-def log_error(e):
-    print(e)
-
 
 def obtenerPortada():
 
@@ -70,7 +41,7 @@ def obtenerPortada():
 
     crearCarpeta(nombre_carpeta)
 
-    info = get_simple("https://semanariouniversidad.com")
+    info = Herramientas.get_simple("https://semanariouniversidad.com")
 
     obtenerPlanos (info, "")
 
