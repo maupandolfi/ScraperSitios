@@ -4,19 +4,19 @@ from xml.etree.ElementTree import Element, SubElement, Comment
 
 def obtenerPortada(directorio):
     codigo = Herramientas.obtenerCodigoTiempo()
-    Herramientas.crearCarpeta(directorio, codigo, "REPRETEL.COM")
+    Herramientas.crearCarpeta(directorio, codigo, "TELETICA.COM")
 
-    info = Herramientas.get_simple("http://www.repretel.com")
+    info = Herramientas.get_simple("https://www.teletica.com")
 
     links = []
 
     homePage = BeautifulSoup(info, 'html.parser')
-    portada  = (homePage.find('section', attrs= {'class', 'noticias-container'}).find_all('a', attrs= {'class': 'contenido'}))
-    noticias_portada = []
+    portada  = (homePage.find('div', attrs= {'class', 'sector-heading-news'}).find_all('div', attrs= {'class': 'text'}))
 
-    for x in range (0,5) :
-        a_con_link = portada[x]
-        links.append( a_con_link.attrs['href'])
+    for x in portada :
+        as_con_link = x.find_all('a')
+        for a in as_con_link :
+            links.append("https://www.teletica.com" + a.attrs['href'])
 
     indice = 1
 
@@ -28,45 +28,42 @@ def obtenerPortada(directorio):
         archivo_xml = Element('nota')
         archivo_txt = ""
 
-        contenidos = sou.find('section', attrs={'class': 'noticia-container'})
+        encabezado = sou.find('div', attrs= {'class': 'title'})
 
         # Titulo
-        titulo = (contenidos.find('h1')).getText()
+        titulo = encabezado.find('h1').getText()
         archivo_txt = archivo_txt + titulo + "\n"
         tit = SubElement(archivo_xml, 'titulo')
         tit.text = titulo
         nombre = "top" + str(indice) + "__" + titulo.replace(":", ",").replace("?", "¿").replace("\"", "")
 
         # Bajada
-        bajada = sou.find('div', attrs={'class': 'sub-header'})
+        bajada = encabezado.find('h3')
         baj = SubElement(archivo_xml, 'bajada')
         baj.text = bajada.getText().replace("\n", "")
         archivo_txt = archivo_txt + bajada.getText() + "\n"
 
         # Parrafos
 
+        contenidos = sou.find('div', attrs={'class': 'main-content'})
+
         texto = SubElement(archivo_xml, 'texto')
 
-        aux = contenidos.find_all('div', attrs={'class':None})
-        for au in aux:
-            if au.getText() != 'Cargando el player...' and au.getText() != '':
-                aud = au
-        #aux2 = aux.find_all('div', attrs={'class':None})
-        textos = aud.find_all('p')
+        aux = contenidos.find('div', attrs={'class': 'body'})
+        textos = aux.find_all('p')
 
         es_lead = True
 
         for p in textos:
-            if p.getText().replace('\n', '') != '':
-                if (es_lead):
-                    parr = SubElement(texto, 'lead')
-                    parr.text = p.getText()
-                    es_lead = False
-                else:
-                    parr = SubElement(texto, 'parrafo')
-                    parr.text = p.getText()
+            if (es_lead):
+                parr = SubElement(texto, 'lead')
+                parr.text = p.getText()
+                es_lead = False
+            else:
+                parr = SubElement(texto, 'parrafo')
+                parr.text = p.getText()
 
-                archivo_txt = archivo_txt + p.getText() + "\n"
+            archivo_txt = archivo_txt + p.getText() + "\n"
 
 
         # Tags
@@ -77,7 +74,7 @@ def obtenerPortada(directorio):
             tag_xml.text = tag.getText()
 
         # Categoría
-        clasificacion = (sou.find('meta', attrs={'property': 'article:section'})).attrs["content"]
+        clasificacion = (sou.find('div', attrs={'id':'main'})).find('h3').getText()
         cat = SubElement(archivo_xml, 'categoria')
         cat.text = clasificacion.replace("\n", "")
 

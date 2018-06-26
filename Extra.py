@@ -11,11 +11,16 @@ def obtenerPortada(directorio):
     links = []
 
     homePage = BeautifulSoup(info, 'html.parser')
-    portada  = (homePage.find('div', attrs= {'id': 'mainBanner'}))
-    noticias_portada = portada.find_all('li')
 
-    for n in range (0,5) :
-        links.append("https://www.diarioextra.com" + noticias_portada[n].a['href'])
+    portada_1  = homePage.find('div', attrs= {'id': 'mainBanner'}).find_all('li')
+    for noticia in portada_1 :
+        links.append("https://www.diarioextra.com" + noticia.a['href'])
+
+    portada_2 = homePage.find_all('section', attrs= {'class': 'wow'})
+    for noticia in portada_2 :
+        a_con_link = noticia.find('a')
+        if (a_con_link) :
+            links.append("https://www.diarioextra.com" + a_con_link['href'])
 
     indice = 1
 
@@ -35,7 +40,7 @@ def obtenerPortada(directorio):
         archivo_txt = archivo_txt + titulo + "\n"
         tit = SubElement(archivo_xml, 'titulo')
         tit.text = titulo
-        nombre = "top" + str(indice) + "__" + titulo.replace(":", ",").replace("?", "¿").replace("\"", "")
+        nombre = "top" + str(indice) + "__" + titulo.replace(":", ",").replace("?", "¿").replace("\"", "").replace("|","")
 
         # Bajada
         bajada = encabezado.h3.getText()

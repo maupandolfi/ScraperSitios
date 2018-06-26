@@ -11,15 +11,21 @@ def obtenerPortada(directorio):
     links = []
 
     homePage = BeautifulSoup(info, 'html.parser')
-    portada  = homePage.find('section')
-    noticias_portada = portada.find_all('a', limit=5)
+
+    portadas = homePage.find_all('section')
 
     categorias = []
 
-    for x in range (0,5) :
-        a_con_link = noticias_portada[x]
-        links.append("https://www.laprensalibre.cr" + a_con_link['href'])
-        categorias.append(a_con_link.find('p', attrs={ 'class', 'sectionName' }).getText())
+    for port in portadas:
+        portada  = port.find_all('a')
+
+        for noticia in portada :
+            links.append("https://www.laprensalibre.cr" + noticia['href'])
+            cat = noticia.find('p', attrs={'class', 'sectionName'})
+            if cat :
+                categorias.append(cat.getText())
+            else :
+                categorias.append("")
 
     indice = 1
 
@@ -56,7 +62,7 @@ def obtenerPortada(directorio):
         es_lead = True
 
         for p in aux:
-            if p.contents[0].name is None and p.parent.name != 'a' and p.parent.name != 'article':
+            if p.contents and p.contents[0].name is None and p.parent.name != 'a' and p.parent.name != 'article':
                 for parrafo in p.contents :
                     if parrafo.name is None and parrafo != ' ':
                         if (es_lead):

@@ -23,7 +23,15 @@ def obtenerPortada(directorio):
 
     for x in range (0,4) :
         links.append(j['slider'][x]['url'])
-    links.append(j['visualB'][0]['url'])
+
+    for x in range(0,3):
+        links.append(j['visualB'][x]['url'])
+
+    for x in range(0,3):
+        links.append(j['visualA'][x]['url'])
+
+    for x in range(0,3):
+        links.append(j['visualC'][x]['url'])
 
     indice = 1
 
@@ -35,8 +43,6 @@ def obtenerPortada(directorio):
 
         archivo_xml = Element('nota')
         archivo_txt = ""
-
-
 
         # Pre-titulo
         pre_titulo = sou.find('h3', attrs={'class': 'pre-titulo'}).getText().replace("\n", "")
@@ -109,15 +115,17 @@ def obtenerPortada(directorio):
 
         # Categoría
         clasificacion = sou.find('h3', attrs={'class': 'breadcrumbs'})
-        cat = SubElement(archivo_xml, 'categoria')
-        cat.text = clasificacion.getText().replace("\n", "")
+        if clasificacion :
+            cat = SubElement(archivo_xml, 'categoria')
+            cat.text = clasificacion.getText().replace("\n", "")
 
         # Tags
         div_tags = sou.find('div', attrs={'class': 'etiquetas'})
-        tags = div_tags.find_all('a')
-        for tag in tags :
-            tag_xml = SubElement(archivo_xml, 'etiqueta')
-            tag_xml.text = tag.getText()
+        if div_tags :
+            tags = div_tags.find_all('a')
+            for tag in tags :
+                tag_xml = SubElement(archivo_xml, 'etiqueta')
+                tag_xml.text = tag.getText()
 
         #Codificacion
         archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore').replace('&quot;', '')

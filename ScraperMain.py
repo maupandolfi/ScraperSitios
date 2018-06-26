@@ -5,6 +5,8 @@ import Financiero
 import Monumental
 import PrensaLibre
 import Repretel
+import Teletica
+import AmeliaRueda
 
 def obtenerInfo():
 
@@ -13,10 +15,11 @@ def obtenerInfo():
 #    CRHoy.obtenerPortada(directorio)
 #    Nacion.obtenerPortada(directorio)
 #    Extra.obtenerPortada(directorio)
-#    Financiero.obtenerPortada(directorio)
+    Financiero.obtenerPortada(directorio)
 #    Monumental.obtenerPortada(directorio)
 #    PrensaLibre.obtenerPortada(directorio)
-    Repretel.obtenerPortada(directorio)
-
+#    Repretel.obtenerPortada(directorio)
+#    Teletica.obtenerPortada(directorio)
+#    AmeliaRueda.obtenerPortada(directorio)
 
 obtenerInfo()
