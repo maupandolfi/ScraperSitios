@@ -11,12 +11,37 @@ def obtenerPortada(directorio):
     links = []
 
     homePage = BeautifulSoup(info, 'html.parser')
-    portada  = (homePage.find('section', attrs= {'class', 'noticias-container'}).find_all('a', attrs= {'class': 'contenido'}))
-    noticias_portada = []
+    portada_1  = homePage.find('section', attrs= {'class', 'noticias-container'})
+    portada_2 = portada_1.find_all('a', attrs= {'class': 'contenido'})
 
-    for x in range (0,5) :
-        a_con_link = portada[x]
-        links.append( a_con_link.attrs['href'])
+    for x in portada_2:
+        links.append( x.attrs['href'])
+
+    portada = homePage.find_all('div', attrs={'class', 'mas-leido-nota'})
+
+    for x in portada:
+        links.append(x.find('a').attrs['href'])
+
+    portada = homePage.find_all('div', attrs={'class', 'noticia-tipo2'})
+
+    for x in range (0, 4):
+        links.append(portada[x].find('a').attrs['href'])
+
+    portada_2 = portada_1.find_next_sibling('section', attrs={'class', 'noticias-container'})
+    portada_3 = portada_2.find_all('a', attrs={'class': 'contenido'})
+
+    for x in portada_3:
+        links.append( x.attrs['href'])
+
+    for x in range (4, 7):
+        links.append(portada[x].find('a').attrs['href'])
+
+    portada_1 = portada_2.find_next_sibling('section', attrs={'class', 'noticias-container'})
+    portada_3 = portada_1.find_all('a', attrs={'class': 'contenido'})
+
+    for x in portada_3:
+        links.append(x.attrs['href'])
+
 
     indice = 1
 
@@ -71,10 +96,11 @@ def obtenerPortada(directorio):
 
         # Tags
         div_tags = contenidos.find('div', attrs={'class': 'tags'})
-        tags = div_tags.find_all('a')
-        for tag in tags :
-            tag_xml = SubElement(archivo_xml, 'etiqueta')
-            tag_xml.text = tag.getText()
+        if div_tags :
+            tags = div_tags.find_all('a')
+            for tag in tags :
+                tag_xml = SubElement(archivo_xml, 'etiqueta')
+                tag_xml.text = tag.getText()
 
         # Categoría
         clasificacion = (sou.find('meta', attrs={'property': 'article:section'})).attrs["content"]

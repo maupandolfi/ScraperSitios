@@ -20,6 +20,22 @@ def get_simple(url):
         return None
 
 
+
+def get_especial(url):
+    try:
+        h = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'}
+        with closing(get(url, stream=True, headers=h)) as resp:
+            if revisar_respuesta(resp):
+                return resp.content
+            else:
+                return None
+
+    except RequestException as e:
+        log_error('Error during requests to {0} : {1}'.format(url, str(e)))
+        return None
+
+
+
 def revisar_respuesta(resp):
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200

@@ -19,7 +19,7 @@ def obtenerPortada(directorio):
 
     for x in noticias_portada:
         div_con_link = x.find('div', attrs={'class': 'headline'})
-        links.append("https://www.nacion.com" + div_con_link.a['href'])
+        links.append("https://www.elfinancierocr.com" + div_con_link.a['href'])
 
     indice = 1
 

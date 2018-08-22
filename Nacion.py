@@ -32,67 +32,71 @@ def obtenerPortada(directorio):
         archivo_txt = ""
 
         # Titulo
-        titulo = (sou.find('div', attrs= {'class', 'headline-hed-last'})).getText()
-        archivo_txt = archivo_txt + titulo + "\n"
-        tit = SubElement(archivo_xml, 'titulo')
-        tit.text = titulo
-        nombre = "top" + str(indice) + "__" + titulo.replace(":", ",").replace("?", "¿").replace("\"", "")
+        aux_titulo = sou.find('div', attrs= {'class', 'headline-hed-last'})
+        if aux_titulo:
+            titulo = aux_titulo.getText()
+            archivo_txt = archivo_txt + titulo + "\n"
+            tit = SubElement(archivo_xml, 'titulo')
+            tit.text = titulo
+            nombre = "top" + str(indice) + "__" + titulo.replace(":", ",").replace("?", "¿").replace("\"", "")
 
-        # Bajada
-        bajada = sou.find('p', attrs={'class': 'subheadline'})
-        baj = SubElement(archivo_xml, 'bajada')
-        baj.text = bajada.getText().replace("\n", "")
-        archivo_txt = archivo_txt + bajada.getText() + "\n"
+            # Bajada
+            bajada = sou.find('p', attrs={'class': 'subheadline'})
+            if bajada:
+                baj = SubElement(archivo_xml, 'bajada')
+                baj.text = bajada.getText().replace("\n", "")
+                archivo_txt = archivo_txt + bajada.getText() + "\n"
 
-        # Parrafos
-        contenidos = sou.find('div', attrs={'id': 'article-content'})
+            # Parrafos
+            contenidos = sou.find('div', attrs={'id': 'article-content'})
 
-        texto = SubElement(archivo_xml, 'texto')
+            texto = SubElement(archivo_xml, 'texto')
 
-        aux = contenidos.find_all(['p', 'span'], attrs={'class': 'element'})
+            aux = contenidos.find_all(['p', 'span'], attrs={'class': 'element'})
 
-        es_lead = True
+            es_lead = True
 
-        for p in aux:
-            if p.name == 'p':
-                if (es_lead):
-                    parr = SubElement(texto, 'lead')
-                    parr.text = p.getText()
-                    es_lead = False
-                else:
-                    parr = SubElement(texto, 'parrafo')
-                    if (p.find('b') is None) :
+            for p in aux:
+                if p.name == 'p':
+                    if (es_lead):
+                        parr = SubElement(texto, 'lead')
                         parr.text = p.getText()
-                    else :
-                        resal = SubElement(parr, 'resaltado')
-                        resal.text = p.getText()
-            else:
-                if p.name == 'span':
-                    subtit = SubElement(texto, 'subtitulo')
-                    subtit.text = p.getText()
-            archivo_txt = archivo_txt + p.getText() + "\n"
+                        es_lead = False
+                    else:
+                        parr = SubElement(texto, 'parrafo')
+                        if (p.find('b') is None) :
+                            parr.text = p.getText()
+                        else :
+                            resal = SubElement(parr, 'resaltado')
+                            resal.text = p.getText()
+                else:
+                    if p.name == 'span':
+                        subtit = SubElement(texto, 'subtitulo')
+                        subtit.text = p.getText()
+                archivo_txt = archivo_txt + p.getText() + "\n"
 
 
-        # Tags
-        div_tags = sou.find('div', attrs={'class': 'etiqueta'})
-        tags = div_tags.find_all('a')
-        for tag in tags :
-            tag_xml = SubElement(archivo_xml, 'etiqueta')
-            tag_xml.text = tag.getText()
+            # Tags
+            div_tags = sou.find('div', attrs={'class': 'etiqueta'})
+            if div_tags :
+                tags = div_tags.find_all('a')
+                for tag in tags :
+                    tag_xml = SubElement(archivo_xml, 'etiqueta')
+                    tag_xml.text = tag.getText()
 
-        # Categoría
-        clasificacion = (sou.find('div', attrs={'class': 'headline-seccion'})).a
-        cat = SubElement(archivo_xml, 'categoria')
-        cat.text = clasificacion.getText().replace("\n", "")
+            # Categoría
+            clasificacion = (sou.find('div', attrs={'class': 'headline-seccion'})).a
+            cat = SubElement(archivo_xml, 'categoria')
+            cat.text = clasificacion.getText().replace("\n", "")
 
-        # Codificacion
-        archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
-        archivo_xml = Herramientas.prettify(archivo_xml).encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
+            # Codificacion
+            archivo_txt = archivo_txt.encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
+            archivo_xml = Herramientas.prettify(archivo_xml).encode('iso-8859-1', 'ignore').decode('iso-8859-1', 'ignore')
 
-        # Creacion de archivos
-        Herramientas.hacerArchivo( archivo_txt, nombre, '.txt')
-        Herramientas.hacerArchivo( archivo_xml, nombre, '.xml')
+            # Creacion de archivos
+            Herramientas.hacerArchivo( archivo_txt, nombre, '.txt')
+            Herramientas.hacerArchivo( archivo_xml, nombre, '.xml')
 
-        indice = indice + 1
+            indice = indice + 1
 
 

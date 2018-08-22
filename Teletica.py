@@ -18,6 +18,13 @@ def obtenerPortada(directorio):
         for a in as_con_link :
             links.append("https://www.teletica.com" + a.attrs['href'])
 
+    portada_otros = (homePage.find('div', attrs={'class', 'main-content'}).find_all('div', attrs={'class': 'text'}))
+
+    for x in portada_otros:
+        as_con_link = x.find_all('a')
+        for a in as_con_link:
+            links.append("https://www.teletica.com" + a.attrs['href'])
+
     indice = 1
 
     for x in links:

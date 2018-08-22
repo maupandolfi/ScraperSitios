@@ -13,9 +13,11 @@ def obtenerPortada(directorio):
 
     datos = codigo.split("-")
     datos2 = datos[2].split("__")[0]
-    codigo_servicio = datos[0] + str(int(datos[1])-1) + datos2
+    codigo_servicio = datos[0] + str(int(datos[1])-1) + str(int(datos2))
 
-    info = Herramientas.get_simple("https://www.crhoy.com/site/dist/json/index2.json?v=" + codigo_servicio)
+    #info = Herramientas.get_simple("https://www.crhoy.com")
+
+    info = Herramientas.get_especial("https://www.crhoy.com/site/dist/json/index2.json?v=" + codigo_servicio)
 
     j = json.loads(info)
     archivo_txt = ""
@@ -38,7 +40,7 @@ def obtenerPortada(directorio):
     for x in links :
 
         link = x
-        info1 = Herramientas.get_simple(link)
+        info1 = Herramientas.get_especial(link)
         sou = BeautifulSoup(info1, 'html.parser')
 
         archivo_xml = Element('nota')

@@ -7,19 +7,21 @@ import PrensaLibre
 import Repretel
 import Teletica
 import AmeliaRueda
+import Semanario
 
 def obtenerInfo():
 
     directorio = 'C:\\Users\\Isiles\\PycharmProjects\\ScraperSitios\\RESULTADOS'
 
-#    CRHoy.obtenerPortada(directorio)
-#    Nacion.obtenerPortada(directorio)
-#    Extra.obtenerPortada(directorio)
+    CRHoy.obtenerPortada(directorio)
+    Nacion.obtenerPortada(directorio)
+    Extra.obtenerPortada(directorio)
     Financiero.obtenerPortada(directorio)
-#    Monumental.obtenerPortada(directorio)
-#    PrensaLibre.obtenerPortada(directorio)
-#    Repretel.obtenerPortada(directorio)
-#    Teletica.obtenerPortada(directorio)
-#    AmeliaRueda.obtenerPortada(directorio)
+    Monumental.obtenerPortada(directorio)
+    PrensaLibre.obtenerPortada(directorio)
+    Repretel.obtenerPortada(directorio)
+    Teletica.obtenerPortada(directorio)
+    AmeliaRueda.obtenerPortada(directorio)
+    Semanario.obtenerPortada(directorio)
 
 obtenerInfo()

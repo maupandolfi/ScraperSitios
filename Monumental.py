@@ -13,8 +13,15 @@ def obtenerPortada(directorio):
     homePage = BeautifulSoup(info, 'html.parser')
     noticias_portada  = (homePage.find_all('div', attrs= {'class': 'carousel-caption'}))
 
-    for x in range (0,5) :
-        a_con_link = noticias_portada[x].find('a')
+    for x in noticias_portada :
+        a_con_link = x.find('a')
+        links.append(a_con_link['href'])
+
+    noticias_portada = homePage.find('div', attrs={'class': 'cont-noticias'})
+    articulos_portada = noticias_portada.find_all('article')
+
+    for articulo in articulos_portada:
+        a_con_link = list(articulo.find_all('a'))[1]
         links.append(a_con_link['href'])
 
     indice = 1
