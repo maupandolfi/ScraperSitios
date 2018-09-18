@@ -8,20 +8,22 @@ import Repretel
 import Teletica
 import AmeliaRueda
 import Semanario
+import Herramientas
 
 def obtenerInfo():
 
-    directorio = 'C:\\Users\\Isiles\\PycharmProjects\\ScraperSitios\\RESULTADOS'
+    directorio = 'C:\\Users\\Isiles\\PycharmProjects\\ScraperSitios\\MUESTRAS_5PM'
+    codigo = Herramientas.obtenerCodigoTiempo()
 
-    CRHoy.obtenerPortada(directorio)
-    Nacion.obtenerPortada(directorio)
-    Extra.obtenerPortada(directorio)
-    Financiero.obtenerPortada(directorio)
-    Monumental.obtenerPortada(directorio)
-    PrensaLibre.obtenerPortada(directorio)
-    Repretel.obtenerPortada(directorio)
-    Teletica.obtenerPortada(directorio)
-    AmeliaRueda.obtenerPortada(directorio)
-    Semanario.obtenerPortada(directorio)
+    CRHoy.obtenerPortada(directorio, codigo)
+    Nacion.obtenerPortada(directorio, codigo)
+    Extra.obtenerPortada(directorio, codigo)
+    Financiero.obtenerPortada(directorio, codigo)
+    Monumental.obtenerPortada(directorio, codigo)
+    PrensaLibre.obtenerPortada(directorio, codigo)
+    Repretel.obtenerPortada(directorio, codigo)
+    Teletica.obtenerPortada(directorio, codigo)
+    AmeliaRueda.obtenerPortada(directorio, codigo)
+    Semanario.obtenerPortada(directorio, codigo)
 
 obtenerInfo()

@@ -6,6 +6,7 @@ import os
 from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
+from selenium import webdriver
 
 def get_simple(url):
     try:
@@ -35,12 +36,21 @@ def get_especial(url):
         return None
 
 
-
 def revisar_respuesta(resp):
     content_type = resp.headers['Content-Type'].lower()
     return (resp.status_code == 200
             and content_type is not None
             and ( content_type.find('html') > -1 or content_type.find('json') > -1 ) )
+
+def get_browser(ruta):
+    try:
+        driver = webdriver.Firefox(executable_path="C:\\geckodriver-v0.21.0-win64\\geckodriver.exe")
+        driver.get(ruta)
+        info = driver.page_source
+        driver.quit()
+        return info
+    except Exception as e:
+        print(e)
 
 
 def log_error(e):
@@ -100,4 +110,12 @@ def hacerArchivo( info, nom, tipo):
     com = nom + tipo
     file = open(com, "w")
     file.write(info)
+    file.close()
+
+def guardarError (e) :
+    error = obtenerCodigoTiempo() + e
+
+    com = "Errores.txt"
+    file = open(com, 'a')
+    file.writelines(error + "\n")
     file.close()
